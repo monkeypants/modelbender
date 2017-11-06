@@ -6,7 +6,9 @@ import os,sys,inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir) 
-from modelbender.metamodel.enterprise import Enterprise, Domain
+from modelbender.metamodel.enterprise import Enterprise
+from modelbender.metamodel.domain import Domain
+from modelbender.metamodel.resource import CanonicalResource, AuthorativeResource
 from modelbender.metamodel import messages
 from modelbender.metamodel import errors
 from modelbender import config
@@ -63,16 +65,19 @@ def load_metamodel(params):
     
     e = Enterprise(cfg.enterprise['name'])
     for domain in cfg.list_domains():
+        d = Domain(e, domain)
         for resource in cfg.list_resources(domain):
-            print("DEBUG: json parsed OK for {}.{}".format(domain, resource))
-            #canonical = resource_canonical(domain, product, resource)
-            #spec = resource_spec(domain, product, resource)
-            #refernces = resource_refernces(domain, product, resource)
-            #if references:
-            #    for k, v in refernces:
-            #        print("{}.{}.{}.{}: {}".format(domain, product, resource, k, v))
-            # create resource
-            # with spec, canonical and references
+            tl = []  # FIXME: process statecharts
+            if not cfg.resource_is_canonical(domain, resource):  # TODO: make this work
+                r = AuthorativeResource(resource, d, tl)
+            else:
+                r = CanonicalResource(resource, d, tl)
+            # FIXME: process swagger specs
+            # FIXME: infer referential stuff
+            d.add_resource(r)
+            #spec = resource_spec(domain, resource)
+            #refernces = resource_refernces(domain, resource)
+        e.add_domain(d)
     return e
 
 

@@ -128,8 +128,8 @@ class Config:
         if resource not in self.list_resources(domain):
             raise errors.ResourceNotFoundInDomainError()
         doms = self.enterprise['domains']
-        return doms[domain]['resources'][resource]
-        
+        return doms[domain][domain]['resources'][resource]  # WHY of WHY
+
     def resource_spec(self, domain, resource):
         rsrc =self.get_resource(domain, resource)
         if 'spec' not in rsrc:
@@ -141,6 +141,13 @@ class Config:
         if 'canonical' not in rsrc:
             return None
         return rsrc['canonical']
+
+    def resource_is_canonical(self, domain, resource):
+        found = self.resource_canonical(domain, resource)
+        if found:
+            return True
+        else:
+            return False
 
     def list_resource_references(self, domain, resource):
         rsrc =self.get_resource(domain, resource)
