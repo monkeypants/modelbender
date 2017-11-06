@@ -72,6 +72,8 @@ def load_metamodel(params):
                 r = AuthorativeResource(resource, d, tl)
             else:
                 r = CanonicalResource(resource, d, tl)
+            # FIXME: process primary and secondary IDs
+            # FIXME: process parents
             # FIXME: process swagger specs
             # FIXME: infer referential stuff
             d.add_resource(r)
