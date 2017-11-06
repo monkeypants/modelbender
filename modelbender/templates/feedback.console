@@ -1,0 +1,8 @@
+Generation Done
+
+enterprise: {{ ctx }}{% for d in ctx.get_domains() %}
+    domain: {{ d }}{% for r in d.get_resources() %}
+        resource: {{ r.label }} ({{ r.get_type() }}){% endfor %}{% endfor %}
+
+See _generated_acme_docs/
+

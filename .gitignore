@@ -1,0 +1,10 @@
+.venv/
+*~
+_build/
+__pycache__/
+*.pyc
+\#*\#
+\.\#*
+MANIFEST
+dist/
+_generated_*/
