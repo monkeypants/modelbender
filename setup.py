@@ -1,10 +1,10 @@
 from distutils.core import setup
 
 setup(
-    name='model_bender',
+    name='modelbender',
     version='0.0-dev',
-    packages=['modelbender'],
+    packages=['modelbender', 'modelbender.metamodel'],
     author="Chris Gough",
     author_email="christopher.d.gough@gmail.com",
-    url="https://github.com/monkeypants/model-bender"
+    url="https://github.com/monkeypants/modelbender"
 )
