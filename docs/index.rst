@@ -7,5 +7,4 @@ Microservice Simulation
 
    overview
    meta_model
-   acme
-   generate_acme
+

@@ -1,17 +1,17 @@
 Meta Model
 ==========
 
-.. automodule:: meta_model
+.. automodule:: modelbender.metamodel
 
 
 Domain
 ------
 
-.. autoclass:: meta_model.Enterprise
+.. autoclass:: modelbender.metamodel.enterprise.Enterprise
    :members:
    :undoc-members:
 
-.. autoclass:: meta_model.Domain
+.. autoclass:: modelbender.metamodel.domain.Domain
    :members:
    :undoc-members:
 
@@ -34,17 +34,17 @@ Resources are REST API representations of a domain entities. In other words, the
 
 These different types of Resource should be sufficient to classify all the resources defined in an enterprise model.
 
-.. autoclass:: meta_model.CanonicalResource
+.. autoclass:: modelbender.metamodel.resource.CanonicalResource
    :members:
    :undoc-members:
 
 
-.. autoclass:: meta_model.AuthorativeResource
+.. autoclass:: modelbender.metamodel.resource.AuthorativeResource
    :members:
    :undoc-members:
 
 
-.. autoclass:: meta_model.ReferentialResource
+.. autoclass:: modelbender.metamodel.resource.ReferentialResource
    :members:
    :undoc-members:
 
@@ -55,15 +55,15 @@ Messages and state
 The meta model represents the concept of data as *state machines* that follow rules layed out in a *state chart*. The state machine emits an events every time it undergoes a *state transition*. 
 
 
-.. autoclass:: meta_model.StateMachine
+.. autoclass:: modelbender.metamodel.state.StateMachine
    :members:
    :undoc-members:
 
-.. autoclass:: meta_model.StateChart
+.. autoclass:: modelbender.metamodel.state.StateChart
    :members:
    :undoc-members:
 
-.. autoclass:: meta_model.StateTransition
+.. autoclass:: modelbender.metamodel.state.StateTransition
    :members:
    :undoc-members:
 
