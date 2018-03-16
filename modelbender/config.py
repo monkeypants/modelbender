@@ -1,10 +1,12 @@
 import os.path
+import os
 import ruamel.yaml as yaml
 from modelbender.metamodel import messages
 from modelbender.metamodel import errors
 
-DEBUG=True  # FIXME should come from environment
+DEBUG=False  # FIXME should come from environment
 MSG = messages.Messenger(DEBUG)
+
 
 def valid_yaml(fname):
     """Returns True if fname is yaml that can be safely parsed."""
@@ -27,6 +29,18 @@ class Params:
 
     def enterprise_yaml(self):
         return os.path.join(self.infile(), 'enterprise.yaml')
+
+    def domain(self):
+        return self._kwargs['domain']
+
+    def service(self):
+        return self._kwargs['service']
+
+    def indir(self):
+        return self._kwargs['indir']
+
+    def outdir(self):
+        return self._kwargs['outdir']
 
 
 class Config:
@@ -68,7 +82,7 @@ class Config:
             MSG.domain_path(fname)
             if not valid_yaml(fname):
                 raise errors.InvalidDomainYamlError()
-            my_doms[dk] = {}
+            #my_doms[dk] = {}
             dom_yaml = yaml.safe_load(open(fname, 'r'))
             my_doms[dk] = {}
             rsrs_keys = []
@@ -93,12 +107,39 @@ class Config:
                         MSG.resource_without_canonical(dk, resource)
                         my_res['canonical'] = False
                     else:
-                        canon =dom_yaml['resources'][resource]['canonical']
+                        canon = dom_yaml['resources'][resource]['canonical']
                         my_res['canonical'] = canon
                     #
                     # product
                     # <-- TODO
-                    
+                    #
+                    # statechart
+                    if 'statechart' not in dom_yaml['resources'][resource].keys():
+                        MSG.resource_without_statechart(dk, resource)
+                    else:
+                        statechart = dom_yaml['resources'][resource]['statechart']
+                        sc_fname =os.path.join(params.infile(), statechart)
+
+                        try:
+                            open(sc_fname, "r")
+                        except FileNotFoundError:
+                            raise Exception("refernced statechart does not exist: {}".format(statechart))
+                        
+                        if not valid_yaml(sc_fname):
+                            raise Exception("invalid statechart yaml: {}".format(statechart))
+                        else:
+                            sc_yaml = yaml.safe_load(open(sc_fname, "r"))
+                            
+                            if 'transitions' not in sc_yaml.keys():
+                                raise Exception("invalid statechart (no transitions): {}".format(statechart))
+                            # TODO: other validation steps...
+                            # - transitions between non-existing states
+                            # - transitions with no from (or to)
+                            # - states with no transitions
+                            # - statechart with no constructor
+                            # (statechart with no destructor is OK, but warning?)
+                            my_res['statechart'] = sc_yaml
+
                     # refernces
                     if 'references' not in dom_yaml['resources'][resource].keys():
                         MSG.resource_without_references(dk, resource)
@@ -108,8 +149,34 @@ class Config:
                         for k in references.keys():
                             my_res['references'][k] = references[k]
                             MSG.resource_has_reference(dk, resource, references[k], k)
-                my_doms[dk]['resources'][resource] = my_res
-        self.enterprise['domains'][dk] = my_doms
+                    if 'parents' in dom_yaml['resources'][resource].keys():
+                        my_res['parents'] = dom_yaml['resources'][resource]['parents']
+                    my_doms[dk]['resources'][resource] = my_res
+        self.enterprise['domains'] = my_doms
+
+    def services_consumed(self, domain, service):
+        # TODO return a list of services ...
+        # print("DEBUG config: called services_consumed('{}', '{}') consumes".format(domain, service))
+        domain = str(domain)
+        service = str(service)
+        try:
+            found = self.enterprise['domains'][domain]['resources'][service]['references'] 
+            return found
+        except:
+            return None
+
+    def parents_of_service(self, domain, service):
+        try:
+            found = self.enterprise['domains'][domain]['resources'][service]['parents']  
+            return found
+        except:
+            return None
+
+    def references_of_service(self, domain, service):
+        try:
+            return self.enterprise['domains'][domain]['resources'][service]['refernces']
+        except:
+            return None
 
     def list_domains(self):
         found = []
@@ -118,7 +185,7 @@ class Config:
         return found
 
     def list_resources(self, domain):
-        resources = self.enterprise['domains'][domain][domain]['resources']  # WHY oh WHY
+        resources = self.enterprise['domains'][domain]['resources']
         r_keys = []
         for k in resources.keys():
             r_keys.append(k)
@@ -128,7 +195,7 @@ class Config:
         if resource not in self.list_resources(domain):
             raise errors.ResourceNotFoundInDomainError()
         doms = self.enterprise['domains']
-        return doms[domain][domain]['resources'][resource]  # WHY of WHY
+        return doms[domain]['resources'][resource]
 
     def resource_spec(self, domain, resource):
         rsrc =self.get_resource(domain, resource)

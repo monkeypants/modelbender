@@ -1,47 +1,53 @@
-ENTERPRISE = "{} Enterprise".format("{{ ctx }}")
+import os
 
-AUTHOR="TODO"
-extensions = ['sphinx.ext.viewcode',
-              'sphinx.ext.graphviz',
-              'sphinx.ext.autodoc']
+COPYRIGHT = os.environ.get("DOCUMENT_COPYRIGHT", "(not speficied)")
+AUTHOR = os.environ.get("DOCUMENT_AUTHOR", "(not speficied)")
+VERSION = "TODO"  # TODO: use the git short-hash, with '-dirty' appended if local changes
+RELEASE = VERSION  # TODO: use version unless some environment variable set?
+
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.graphviz',
+    'sphinxcontrib.blockdiag',
+    'sphinxcontrib.seqdiag',
+    'sphinxcontrib.actdiag',
+    'sphinxcontrib.nwdiag',
+]
 templates_path = ['_templates']
 source_suffix = '.rst'
 master_doc = 'index'
-project = 'Model Bender'
-copyright = '2017, {}'.format(AUTHOR)
+project = '{{ ctx }}'
+copyright = COPYRIGHT
 author = AUTHOR
-version = '0.0'
-release = '0.0'
+version = VERSION
+release = RELEASE
 language = None
-exclude_patterns = ['_build', 'Thumbs.db',
-                    '.DS_Store', '.venv']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '.venv']
 pygments_style = 'sphinx'
 todo_include_todos = False
 html_theme = 'alabaster'
-# html_theme_options = {}
 html_static_path = ['_static']
-# refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars
 html_sidebars = {
-    '**': [
-        'about.html',
-        'navigation.html',
-        'relations.html',  # needs 'show_related': True theme option to display
-        'searchbox.html',
-        'donate.html',
-    ]
+    '**': ['about.html', 'navigation.html', 'searchbox.html']
 }
-htmlhelp_basename = '{{ ctx }}'
+
+htmlhelp_basename = '{{ ctx }}doc'  # TODO: lower, strip spaces
 latex_elements = {
     'papersize': 'a4paper',
 }
-latex_toplevel_sectioning="part"
 latex_documents = [
-    (master_doc, '{{ ctx }}.tex', '{{ ctx }}',
+    (master_doc, '{}.tex'.format(htmlhelp_basename), u'{{ ctx }} Documentation',
      AUTHOR, 'manual'),
 ]
+man_pages = [
+    (master_doc, '{{ ctx }}',  # TODO: lower, strip spaces
+     u'{{ ctx }} Documentation', [author], 1)
+]
 texinfo_documents = [
-    (master_doc, '{{ CTX }}', '{{ CTX }} Documentation',
-     author, '{{ CTX }}',
-     'Enterprise integration surface model for {{ CTX }}',
+    (master_doc, '{{ ctx }}',  # TODO: lower, strip spaces
+     u'{{ ctx }} core Documentation',
+     author, '{{ ctx }}',  # TODO: lower, strip spaces
+     'One line description of project.',
      'Miscellaneous'),
 ]

@@ -28,6 +28,19 @@ class Enterprise:
         if domain not in self._domains:
             self._domains.append(domain)
 
+    def has_domain_named(self, domain_name):
+        dom_name_found = False
+        for dom in self.get_domains():
+            if str(dom) == str(domain_name):
+                return True
+        return False
+
+    def get_domain_named(self, domain_name):
+        for dom in self.get_domains():
+            if str(dom) == str(domain_name):
+                return dom
+        return False
+
     def __str__(self):
         return self.name
 

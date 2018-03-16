@@ -78,7 +78,7 @@ class StateChart:
             return False
         return True
 
-    def add_transition(self, from_state, to_state, name=None):
+    def add_transition(self, from_state=None, to_state=None, name=None):
         if from_state not in self._states:
             self.add_state(from_state)
         if to_state not in self._states:
@@ -101,6 +101,7 @@ class StateChart:
         return False
 
     def get_rst_table_lines(self):
+        ''' TODO: probably delete this method ''' 
         longest_state_name = len("From State")
         states = self.get_states()
         if states and len(self.get_transitions()) > 0:
@@ -149,6 +150,10 @@ class StateChart:
         returns snippets of dot language, that can be used for
         rendering graphviz statechart.
         """
+        '''
+        TODO: probably delete this method
+        because blockdiag is better
+        ''' 
         out_lines = []
         # states
         line_tmpl = "{};"

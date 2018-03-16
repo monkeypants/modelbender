@@ -1,0 +1,20 @@
+digraph d {
+   label="entities directly related to {{ service }}";
+   node [shape=rectangle style=filled fillcolor=lightgrey];
+   edge [arrowhead=crow];
+
+   subgraph cluster_{{ service }} {
+      label="<<Domain>>\n{{ service.get_domain() }}";
+      {{ service }} [label="<<{{ service.get_type() }}>>\n{{ service }}" fillcolor=white];
+
+      //parents {% for p in service.get_parents() %}
+      {{ p }} -> {{ service }}; {% endfor %}
+
+      //children {% for c in service.get_children() %}
+      {{service }} -> {{ c }}; {% endfor %}
+   }
+   // external dependancies {% for dep in service.get_external_dependancies() %}
+   {{ dep }} [label="{{ dep.get_domain() }}.{{ dep }}"];
+   {{ dep }} -> {{ service }}; {% endfor %}
+   // external dependants ...
+}

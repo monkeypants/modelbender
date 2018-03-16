@@ -4,47 +4,60 @@
 class Domain:
     """
     A domain:
-     * is a collection of distinct Resources.
+     * is a collection of distinct Services.
      * is the semantic authority of at least one concept
      * provides services related to their semantic authority
 
     The purpose of the Domain class in the meta model is to
-    collect and manage resources to the model.
+    collect and manage services to the model.
     """
     def __init__(self, enterprise, label):
         enterprise.add_domain(self)
         self.enterprise = enterprise
         self.label = label
-        self._resources = []
+        self._services = []
+    
+    def has_service_named(self, service_name):
+        service = self.get_service_named(service_name)
+        if service:
+            return True
+        else:
+            return False
+
+    def get_service_named(self, service_name):
+        for service in self._services:
+            if str(service) == service_name:
+                return service
+        return False
 
     def get_enterprise(self):
         return self.enterprise
 
-    def num_resources(self):
-        return len(self._resources)
+    def num_services(self):
+        return len(self._services)
 
-    def get_canonical_resources(self):
+    def get_canonical_services(self):
         out = []
-        for r in self._resources:
-            if r.get_type().name == "Canonical":
-                out.append(r)
+        for s in self._services:
+            if s.get_type().name == "Canonical":
+                out.append(s)
         return out
 
-    def num_canonical_resources(self):
+    def num_canonical_services(self):
         counter = 0
-        for r in self.get_canonical_resources():
+        for r in self.get_canonical_services():
             counter += 1
         return counter
 
-    def has_canonical_resources(self):
-        if self.num_canonical_resources() == 0:
+    def has_canonical_services(self):
+        if self.num_canonical_services() == 0:
             return False
         return True
 
     def depends_on_services(self):
         """
         returns true if there is a service in another
-        domain that a resource in this domain depends on.
+        domain that a service in this domain depends on.
         """
         if self.num_services_depended_on() > 0:
             return True
@@ -53,7 +66,7 @@ class Domain:
     def num_services_depended_on(self):
         """
         returns the number of services in other domains
-        that are depended on by a resource in this domain.
+        that are depended on by a service in this domain.
         """
         return len(self.get_services_depended_on())
 
@@ -64,16 +77,16 @@ class Domain:
 
         This is defined as integration patterns, such as
         ResolutionRequest, between canonical or authorative
-        resources in this domain, and some canonical resource
+        services in this domain, and some canonical service
         in anoter domain (which may manifest as a referential
-        resource in that other domain)
+        service in that other domain)
         """
         found = []
-        for r in self.get_resources():
-            if r.get_type() != "Referential":
-                for s in r.get_services_consumed():
-                    if s not in found:
-                        found.append(s)
+        for s in self.get_services():
+            if s.get_type() != "Referential":
+                for c in s.get_services_consumed():
+                    if c not in found:
+                        found.append(c)
         return found
 
     def is_depended_on(self):
@@ -88,25 +101,25 @@ class Domain:
     def num_services_that_depend_on(self):
         """
         returns the number of services in other domains
-        that depend on resources in this domain.
+        that depend on services in this domain.
         """
         return len(self.get_services_that_depend_on())
 
     def get_services_that_depend_on(self):
         """
         returns the services in other domains that
-        depend on resources in this domain.
+        depend on services in this domain.
 
         This is defined as integration patterns, such as
-        ResolutionRequest, between a canonical resource in
-        this domain and resources (canonical or authorative)
+        ResolutionRequest, between a canonical service in
+        this domain and services (canonical or authorative)
         in other domains that depend on them.
         """
         found = []
-        for r in self.get_resources():
-            if r.get_type() == "Referential":
-                if r.ref not in found:
-                    found.append(r.ref)
+        for s in self.get_services():
+            if s.get_type() == "Referential":
+                if s.ref not in found:
+                    found.append(s.ref)
         return found
 
     def get_domains_that_depend_on(self):
@@ -126,30 +139,33 @@ class Domain:
     def get_domains_depended_on(self):
         found = []
         for s in self.get_services_depended_on():
-            print(s)  # DEBUG
             domain = s.get_domain()
             if domain not in found:
                 found.append(domain)
         return found
 
-    def get_resource_refs(self):
+    def get_service_refs(self):
         found = []
-        for r in self.get_resources():
-            if r.get_type() == "Referntial":
-                if r.ref not in found:
-                    found.append(r.ref)
+        for s in self.get_services():
+            if s.get_type() == "Referntial":
+                if s.ref not in found:
+                    found.append(s.ref)
         return found
 
-    def get_num_resource_refs(self):
-        return len(self.get_resource_refs())
+    def get_num_service_refs(self):
+        return len(self.get_service_refs())
     
-    def add_resource(self, resource):
-        if resource not in self._resources:
-            self._resources.append(resource)
+    def add_service(self, service):
+        if service not in self._services:
+            self._services.append(service)
+
+    def get_services(self):
+        return self._services
 
     def get_resources(self):
-        return self._resources
-
+        # FIXME: service/resource confusion
+        return self._services
+    
     # TODO: get_*, has_*, tests
 
     def __str__(self):

@@ -1,11 +1,8 @@
-{{ctx}} Integration Sufface Model
-=========================={% for i in ctx.__str__() %}={% endfor %}
+Integration Surface Model for {{ctx}}
+=============================={% for i in ctx.__str__() %}={% endfor %}
 
 .. toctree::
-
-   overview
-   domains
-   integrations
-   events
-
+   :glob:
+   
+   domains/*
 

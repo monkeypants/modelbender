@@ -1,0 +1,30 @@
+modelbender package
+===================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    modelbender.acme
+    modelbender.metamodel
+
+Submodules
+----------
+
+modelbender\.config module
+--------------------------
+
+.. automodule:: modelbender.config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: modelbender
+    :members:
+    :undoc-members:
+    :show-inheritance:
