@@ -1,8 +1,10 @@
 blockdiag {
-  {{ resource }}
-  // standard states{-% for state in resource.statechart.get_states() %-}
-  {-{ state.name }-}xxx [shape=roundbox];{-% endfor %-}
-  // constructors...
-  // destructors...
-  // transitions...
+   orientation=portrait;
+   {{ resource }} [shape=roundedbox];
+   start [shape=beginpoint];
+   end [shape=endpoint];
+   start -> {{ resource }} [label=create];
+   {{ resource }} -> {{ resource }} [label=update];
+   {{ resource }} -> end [label=delete];
 }
+

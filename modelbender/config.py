@@ -119,26 +119,20 @@ class Config:
                     else:
                         statechart = dom_yaml['resources'][resource]['statechart']
                         sc_fname =os.path.join(params.infile(), statechart)
-
                         try:
                             open(sc_fname, "r")
                         except FileNotFoundError:
-                            raise Exception("refernced statechart does not exist: {}".format(statechart))
-                        
+                            msg = "refernced statechart does not exist: {}"
+                            raise Exception(msg.format(statechart))
                         if not valid_yaml(sc_fname):
                             raise Exception("invalid statechart yaml: {}".format(statechart))
                         else:
                             sc_yaml = yaml.safe_load(open(sc_fname, "r"))
                             
                             if 'transitions' not in sc_yaml.keys():
-                                raise Exception("invalid statechart (no transitions): {}".format(statechart))
-                            # TODO: other validation steps...
-                            # - transitions between non-existing states
-                            # - transitions with no from (or to)
-                            # - states with no transitions
-                            # - statechart with no constructor
-                            # (statechart with no destructor is OK, but warning?)
-                            my_res['statechart'] = sc_yaml
+                                msg = "invalid statechart (no transitions): {}"
+                                raise Exception(msg.format(statechart))
+                            my_res['transitions'] = sc_yaml['transitions']
 
                     # refernces
                     if 'references' not in dom_yaml['resources'][resource].keys():
@@ -202,6 +196,12 @@ class Config:
         if 'spec' not in rsrc:
             return None
         return rsrc['spec']
+
+    def resource_transitions(self, domain, resource):
+        rsrc =self.get_resource(domain, resource)
+        if 'transitions' not in rsrc.keys():
+            return None
+        return rsrc['transitions']
 
     def resource_canonical(self, domain, resource):
         rsrc =self.get_resource(domain, resource)

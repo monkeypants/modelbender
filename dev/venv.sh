@@ -5,7 +5,7 @@ act="${ROOT}/.venv/bin/activate"
 
 if [ ! -f "${act}" ]; then
     set -e
-    virtualenv .venv
+    virtualenv -p python3.6 .venv
     source ${act}
     pip install -r requirements.txt
     set +e

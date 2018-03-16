@@ -12,3 +12,6 @@ sudo chown chtis:chtis _tmp/*/*
 #sudo chown chtis:chtis _tmp/*/*/*
 
 ../../scripts/mk_diagrams.sh
+cd _tmp
+./venv.sh make html
+#make latexpdf

@@ -23,8 +23,12 @@ class BaseService:
     def __init__(self, label, domain, transition_list=None):
         sc = StateChart()
         if transition_list:
-            for from_state, to_state in transition_list:
-                sc.add_transition(from_state, to_state)
+            for from_state, to_state, transition_name in transition_list:
+                sc.add_transition(
+                    from_state=from_state,
+                    to_state=to_state,
+                    name=transition_name
+                )
         self.state_chart = sc
         self.domain = domain
         self.label = label

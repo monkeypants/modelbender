@@ -52,6 +52,7 @@ def enterprise(**kwargs):
     gitignore_template = jenv.get_template('.gitignore')
     venvsh_template = jenv.get_template('venv.sh')
     readme_template = jenv.get_template('README.txt')
+    todo_template = jenv.get_template('TODO.txt')
 
     base_fname = os.path.join('/work', outdir)
     rst_fname = os.path.join(base_fname, "index.rst")
@@ -62,16 +63,17 @@ def enterprise(**kwargs):
     gitignore_fname = os.path.join(base_fname, ".gitignore")
     venvsh_fname = os.path.join(base_fname, "venv.sh")
     readme_fname = os.path.join(base_fname, "README.txt")
-
+    todo_fname = os.path.join(base_fname, "TODO.txt")
     root_files = (
-            (rst_template, rst_fname),
-            (md_template, md_fname),
-            (makefile_template, makefile_fname),
-            (confpy_template, confpy_fname),
-            (requirements_template, requirements_fname),
-            (gitignore_template, gitignore_fname),
-            (venvsh_template, venvsh_fname),
-            (readme_template, readme_fname)
+        (rst_template, rst_fname),
+        (md_template, md_fname),
+        (makefile_template, makefile_fname),
+        (confpy_template, confpy_fname),
+        (requirements_template, requirements_fname),
+        (gitignore_template, gitignore_fname),
+        (venvsh_template, venvsh_fname),
+        (readme_template, readme_fname),
+        (todo_template, todo_fname)
     )
     for template, fname in root_files:
         os.makedirs(os.path.dirname(fname), exist_ok=True)
@@ -126,8 +128,12 @@ def generate_domain(enterprise, domain_name, outdir):
         resource_files = (
             (
                 jenv.get_template('resource_statechart_block.diag'),
-                os.path.join(domain_dir, "{}.rst".format(str(my_resource)))
+                os.path.join(domain_dir, "{}_statechart_block.diag".format(str(my_resource)))
             ),
+            (
+                jenv.get_template('resource.rst'),
+                os.path.join(domain_dir, "{}.rst".format(str(my_resource)))  
+            )
         )    
         for template, fname in resource_files:
             os.makedirs(os.path.dirname(fname), exist_ok=True)
@@ -187,7 +193,7 @@ def service(**kwargs):
     outdir = prms.outdir()
     generate_service(enterprise, domain_name, service_name, outdir)
 '''
-
+'''
 def generate_service(enterprise, domain_name, service_name, outdir):
     if not enterprise.has_domain_named(domain_name):
         raise Exception(
@@ -220,7 +226,7 @@ def generate_service(enterprise, domain_name, service_name, outdir):
         fp.write(template.render(service=my_service))
         fp.close()
         print("generating {}".format(fname))
-
+'''
 
 @main.command()
 @click.option("--indir", default="metamodel", help=INDIR_HELP)
@@ -252,7 +258,27 @@ def load_metamodel(params):
         d = Domain(e, dom)
         #TODO: fix the config tree s/resource/service/g
         for service in cfg.list_resources(dom):
-            tl = []  # FIXME: process statecharts
+            tl = []
+            transitions = cfg.resource_transitions(dom, service)
+            if transitions:
+                for transition in transitions:
+                    if "from_state" in transition.keys():
+                        from_state = transition["from_state"]
+                    else:
+                        from_state = None
+                    if "to_state" in transition.keys():
+                        to_state = transition["to_state"]
+                    else:
+                        to_state = None
+                    if "name" in transition.keys():
+                        name = transition["name"]
+                    else:
+                        name = None
+                    tl.append({'from_state':from_state,
+                               'to_state':to_state,
+                               'name':name})
+            else:
+                raise Exception("{} transitions: {}.{}".format(transitions, dom, service))
             # canonical, authorative or referential
             if cfg.resource_is_canonical(dom, service):
                 s = CanonicalService(service, d, tl)

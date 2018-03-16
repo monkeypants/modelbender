@@ -199,6 +199,7 @@ def create_statechart(transition_list):
     sc =StateChart()
     for from_state, to_state in transition_list:
         sc.add_transition(from_state, to_state)
+    return sc
 
 
 class StateTransition:

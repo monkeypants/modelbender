@@ -1,0 +1,18 @@
+TODO
+====
+
+This document attempts to outline the detectable deficiencies in the metamodel.
+
+Poetically, it is very much a work in progress.
+
+Miscelanious:
+ * replace "ctx" with "enterprise" with name for enterprise-level context in templates.
+ * move TODO items into top-level enterprise methods, so we can print them conveniently and conditionally here.
+ * introduce intermediate "service" object, between domain and resource. Clear up ambiguity: almost everywhere we say "service" in the current codebase we should say "resource".
+
+StateChart not populated
+------------------------
+
+The following resources do not have state charts config data.
+{% for domain in ctx.get_domains() %}{% for resource in domain.get_resources() %}{% if not resource.state_chart.is_populated() %}
+ * {{ domain }}.{{ resource }}{% endif %}{% endfor %}{% endfor %}

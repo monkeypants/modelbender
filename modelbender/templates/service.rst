@@ -6,7 +6,13 @@
 State Chart
 -----------
 
-TODO: insert statechart
+.. blockdiag::
+
+   {{ service }} [shape=roundbox];
+   beginpoint -> {{ service }} [label=create];;
+   {{ service -> {{ service }} [label=update];
+   {{ service }} -> endpoint [label=delete];
+
 
 Entity / Relationship Diagram
 -----------------------------

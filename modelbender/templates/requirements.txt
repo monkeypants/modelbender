@@ -1,2 +1,16 @@
 sphinx
 sphinxcontrib-spelling
+pyinotify
+
+paver
+ruamel.yaml
+
+sphinxcontrib.blockdiag
+sphinxcontrib.seqdiag
+sphinxcontrib.actdiag
+sphinxcontrib.nwdiag
+blockdiag
+seqdiag
+actdiag
+nwdiag
+
