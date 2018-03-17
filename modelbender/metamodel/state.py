@@ -11,8 +11,22 @@ class StateChart:
         self._transitions = []
         self._states = []
 
+    def __str__(self):
+        return """
+        states: {}
+        transitions: {}""".format(
+            self._states,
+            self._transitions)
+
     def get_transitions(self):
         return self._transitions
+
+    def get_internal_transitions(self):
+        it = []
+        for t in self.get_transitions():
+            if t.from_state and t.to_state:
+                it.append(t)
+        return it
 
     def is_populated(self):
         if len(self._transitions) > 0:
@@ -24,7 +38,11 @@ class StateChart:
             self._states.append(verb)
 
     def get_states(self):
-        return self._states
+        states = []
+        for state in self._states:
+            if state:  # ignore None state
+                states.append(state)
+        return states
 
     def has_abstract_states(self):
         has_abstract = False
@@ -66,7 +84,7 @@ class StateChart:
     def get_concrete_states(self):
         concrete_states = []
         for s in self._states:
-            if s:
+            if s:  # ignore the None state
                 concrete_states.append(s)
         return concrete_states
 
@@ -197,22 +215,24 @@ class StateChart:
 
 def create_statechart(transition_list):
     sc =StateChart()
-    for from_state, to_state in transition_list:
-        sc.add_transition(from_state, to_state)
+    for t in transition_list:
+        sc.add_transition(
+            from_state=t['from_state'],
+            to_state=t['to_state'],
+            name=t['name'])
     return sc
 
 
 class StateTransition:
-    """
-    {"from": from_state,
-    "to": to_state,
-    "name": name}
-    """
     def __init__(self, from_state, to_state, name):
         self.from_state = from_state
         self.to_state = to_state
         self.name = name
         #self.emit()
+
+    def __repr__(self):
+        tmpl = "StateTransition(from_state='{}', to_state='{}', name='{}')"
+        return tmpl.format(self.from_state, self.to_state, self.name)
 
 
 class StateMachine:

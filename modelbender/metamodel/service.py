@@ -1,4 +1,4 @@
-from modelbender.metamodel.state import StateChart
+from modelbender.metamodel.state import create_statechart
 #
 # A domain is modelled as a collection of typed services.
 #
@@ -15,21 +15,12 @@ class ServiceType:
 
 
 # TODO: refactor BaseResourceType
-
 class BaseService:
     """
     Abstract base class - do not instantiate
     """
     def __init__(self, label, domain, transition_list=None):
-        sc = StateChart()
-        if transition_list:
-            for from_state, to_state, transition_name in transition_list:
-                sc.add_transition(
-                    from_state=from_state,
-                    to_state=to_state,
-                    name=transition_name
-                )
-        self.state_chart = sc
+        self.state_chart = create_statechart(transition_list)
         self.domain = domain
         self.label = label
         self.domain.add_service(self)

@@ -261,13 +261,14 @@ def load_metamodel(params):
             tl = []
             transitions = cfg.resource_transitions(dom, service)
             if transitions:
+                #raise Exception(transitions)  # DEBUG
                 for transition in transitions:
-                    if "from_state" in transition.keys():
-                        from_state = transition["from_state"]
+                    if "from" in transition.keys():
+                        from_state = transition["from"]
                     else:
                         from_state = None
-                    if "to_state" in transition.keys():
-                        to_state = transition["to_state"]
+                    if "to" in transition.keys():
+                        to_state = transition["to"]
                     else:
                         to_state = None
                     if "name" in transition.keys():
