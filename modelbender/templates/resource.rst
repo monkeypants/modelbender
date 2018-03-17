@@ -28,20 +28,7 @@ State Chart
       // kludge{% for t in resource.state_chart.get_internal_transitions() %}
       {{ t.from_state }} -> {{ t.to_state }} [label={{ t.name }}];{% endfor %}
    }
-
-{% if resource.state_chart.has_concrete_states() %}
-{{ resource }} has {{ resource.state_chart.num_concrete_states() }} possible states.
-{% for state in resource.state_chart.get_states() %}
- * {{ state }}{% endfor %}
-{% endif %}{% if resource.state_chart.has_constructor_transitions() %}
-{{ resource }} has {{ resource.state_chart.num_constructor_transitions() }} constructor transitions.
-{% for t in resource.state_chart.get_constructor_transitions() %}
- * {{ t }}{% endfor %}
-{% endif %}{% if resource.state_chart.has_destructor_transitions() %}
-{{ resource }} has {{ resource.state_chart.num_destructor_transitions() }} desstructor transitions.
-{% for t in resource.state_chart.get_destructor_transitions() %}
- * {{ t }}{% endfor %}{% endif %}{% endif %}
-
+{% endif %}
 
 Entity / Relationship Diagram
 -----------------------------
