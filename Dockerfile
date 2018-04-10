@@ -21,9 +21,14 @@ RUN apt-get install -y python-virtualenv
 # don't do this...
 # replace it with `pip install -r requirements.txt` once everything stabilises
 # so that we have single version of truth for dependencies/dev
+RUN pip install --upgrade pip
 RUN pip install sphinx
 RUN pip install click
 RUN pip install ruamel.yaml
+RUN pip install blockdiag
+RUN pip install seqdiag
+RUN pip install actdiag
+RUN pip install nwdiag
 
 # click is fussy about locales, which is OK by me
 ENV LC_ALL=C.UTF-8
