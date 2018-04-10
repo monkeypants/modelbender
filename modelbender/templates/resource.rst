@@ -13,20 +13,22 @@ State Chart
 
    blockdiag {{ resource }} {
       orientation=portrait;
-      // non-entrant states{% for state in resource.state_chart.get_concrete_states() %}
+
+      // states{% for state in resource.state_chart.get_concrete_states() %}
       {{ state }} [shape=roundedbox];{% endfor %}
-      // genesis state{% if resource.state_chart.has_constructor_transitions() %}
+
+      // mutations{% for t in resource.state_chart.get_internal_transitions() %}
+      {{ t.from_state }} -> {{ t.to_state }}{% if t.name %} [label={{ t.name }}]{% endif %};{% endfor %}
+
+      // constructors{% if resource.state_chart.has_constructor_transitions() %}
       genesis_state [shape=beginpoint, label=""];
       {% for t in resource.state_chart.get_constructor_transitions() %}
-      genesis_state -> {{ t.to_state }} [label={{ t.name }}];{% endfor %}{% endif %}
+      genesis_state -> {{ t.to_state }}{% if t.name %} [label={{ t.name }}]{% endif %};{% endfor %}{% endif %}
       
-      // terminal state{% if resource.state_chart.has_destructor_transitions() %}
+      // destructors{% if resource.state_chart.has_destructor_transitions() %}
       terminal_state [shape=endpoint, label=""];
       {% for t in resource.state_chart.get_destructor_transitions() %}
-      {{ t.from_state }} -> terminal_state [label={{ t.name }}];{% endfor %}{% endif %}
-      
-      // kludge{% for t in resource.state_chart.get_internal_transitions() %}
-      {{ t.from_state }} -> {{ t.to_state }} [label={{ t.name }}];{% endfor %}
+      {{ t.from_state }} -> terminal_state{% if t.name %} [label={{ t.name }}]{% endif %};{% endfor %}{% endif %}
    }
 {% endif %}
 
