@@ -5,6 +5,7 @@ code that I didn't want to keep looking at in the main modelender.py script
 import os
 import os.path
 import re
+import subprocess
 
 # OS level commands
 CMD_DOT="dot -Tpng {0}.dot -o {0}.png"
@@ -58,7 +59,7 @@ def gen_doc_renderer(indir, outdir):
     for domain_name in os.listdir(domain_base):
         domain_path = os.path.join(domain_base, domain_name)
         if os.path.isdir(domain_path):
-            #print("  {} is a domain_path (directory)".format(domain_path))
+            print("  rendering diagrams in {}".format(domain_path))
             for resource_name in os.listdir(domain_path):
                 resource_path = os.path.join(domain_path, resource_name)
                 if os.path.isfile(resource_path):
@@ -90,6 +91,7 @@ def execute_commands(cmds, resource_name, domain_path):
         for part in parts[1:]:
             name_part = "{}.{}".format(name_part, part)
     for cmd in cmds:
-        # FIXME: make the OS call, rather than just printing this out...
-        print("cd {}".format(domain_path))
-        print(cmd.format(name_part))  # DEBUG
+        #print("cd {}".format(domain_path))
+        os.chdir(domain_path)
+        #print(cmd.format(name_part))  # DEBUG
+        subprocess.run(cmd.format(name_part), shell=True)
