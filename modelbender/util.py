@@ -37,29 +37,16 @@ def gen_doc_renderer(indir, outdir):
     Assumes:
 
      * the container has all the OS-level dependencies installed                                       
-     * that dot files don't have more than one '.' in their names                                      
      * your .diag files are named *_block.diag, *_seq.diag, *_act.diag and *_nw.diag                   
 
     Containerisation (and templates) should make those assumptions safe.
 
-    TODO:
-
-     * loop over all outdir/domains/* and call out to generator programs                               
-     * venv.sh make html in the outdir
-
-    Generator programs are:
-
-     * graphviz                                                                                        
-     * blockdiag                                                                                       
-     * seqdiag                                                                                         
-     * actdiag                                                                                         
-     * nwdiag                              
     """
     domain_base = os.path.join(indir, 'domains')
     for domain_name in os.listdir(domain_base):
         domain_path = os.path.join(domain_base, domain_name)
         if os.path.isdir(domain_path):
-            print("  rendering diagrams in {}".format(domain_path))
+            print("rendering diagrams in {}".format(domain_name))
             for resource_name in os.listdir(domain_path):
                 resource_path = os.path.join(domain_path, resource_name)
                 if os.path.isfile(resource_path):
