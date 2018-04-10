@@ -17,6 +17,7 @@ from modelbender.metamodel.service import CanonicalService, AuthorativeService
 from modelbender.metamodel import messages
 from modelbender.metamodel import errors
 from modelbender import config
+from modelbender import util
 
 jenv = Environment(
     loader=PackageLoader('modelbender', 'templates'),
@@ -34,6 +35,21 @@ OUTDIR_HELP = "the directory wher you want your generated docs"
 def main():
     """Over-arching hook for the click CLI program."""
     pass
+
+@main.command()
+@click.option("--indir", default="_tmp", help=INDIR_HELP)
+@click.option("--outdir", default="_tmp", help=OUTDIR_HELP)
+def render(**kwargs):
+    """Render generated documentation
+
+    delegates to util.
+    """
+    prms = config.Params(kwargs)
+    outdir=os.path.join('/work', prms.outdir())
+    indir=os.path.join('/work', prms.indir())
+
+    util.gen_doc_renderer(indir, outdir)
+
 
 @main.command()
 @click.option("--indir", default="metamodel", help=INDIR_HELP)
