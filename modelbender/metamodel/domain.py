@@ -1,6 +1,8 @@
 #
 # An enterprise is modeled as a collection of domains
 #
+
+
 class Domain:
     """
     A domain:
