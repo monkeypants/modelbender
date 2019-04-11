@@ -1,4 +1,4 @@
-* model-bender version:
+* modelbender version:
 * Python version:
 * Operating System:
 

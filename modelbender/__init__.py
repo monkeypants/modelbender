@@ -1,8 +1,5 @@
-import os.path
-import os, sys, inspect
+# -*- coding: utf-8 -*-
 
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-sys.path.insert(0, currentdir)
-
-import metamodel
-import util
+__author__ = """Chris Gough"""
+__email__ = 'chris.gough@gosource.com.au'
+__version__ = '0.1.0'

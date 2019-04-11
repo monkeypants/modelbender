@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use model-bender in a project::
+To use modelbender in a project::
 
-    import model_bender
+    import modelbender
