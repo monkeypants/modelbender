@@ -1,10 +1,20 @@
-Microservice Simulation
-=======================
+Welcome to model-bender's documentation!
+======================================
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Contents:
 
-   overview
-   meta_model
-   api/modules
+   readme
+   installation
+   usage
+   modules
+   contributing
+   authors
+   history
+
+Indices and tables
+==================
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
